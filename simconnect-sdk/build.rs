@@ -28,6 +28,7 @@ fn main() {
         .allowlist_function("SimConnect_Close")
         .allowlist_function("SimConnect_GetNextDispatch")
         .allowlist_function("SimConnect_MapClientEventToSimEvent")
+        .allowlist_function("SimConnect_TransmitClientEvent")
         .allowlist_function("SimConnect_Open")
         .allowlist_function("SimConnect_RequestDataOnSimObject")
         .allowlist_function("SimConnect_RequestFacilitiesList")
@@ -61,6 +62,8 @@ fn main() {
         .allowlist_var("SIMCONNECT_VIEW_SYSTEM_EVENT_DATA_COCKPIT_2D")
         .allowlist_var("SIMCONNECT_VIEW_SYSTEM_EVENT_DATA_COCKPIT_VIRTUAL")
         .allowlist_var("SIMCONNECT_VIEW_SYSTEM_EVENT_DATA_ORTHOGONAL")
+        .allowlist_var("SIMCONNECT_GROUP_PRIORITY_HIGHEST")
+        .allowlist_var("SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY")
         .generate()
         .expect("Unable to generate bindings");
 

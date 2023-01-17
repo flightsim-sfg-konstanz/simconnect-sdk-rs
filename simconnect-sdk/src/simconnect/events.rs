@@ -1,5 +1,5 @@
 use crate::{
-    bindings, success, ClientEvent, NotificationGroup, SimConnect, SimConnectError,
+    bindings, success, ClientEvent, FlxClientEvent, NotificationGroup, SimConnect, SimConnectError,
     SystemEventRequest,
 };
 
@@ -35,6 +35,32 @@ impl SimConnect {
                 self.handle.as_ptr(),
                 notification_group as u32,
                 1,
+            )
+        })
+    }
+
+    pub fn map_client_event_to_sim_event(
+        &self,
+        event: impl FlxClientEvent,
+    ) -> Result<(), SimConnectError> {
+        success!(unsafe {
+            bindings::SimConnect_MapClientEventToSimEvent(
+                self.handle.as_ptr(),
+                event.event_id(),
+                event.event_name(),
+            )
+        })
+    }
+
+    pub fn transmit_event(&self, event: impl FlxClientEvent) -> Result<(), SimConnectError> {
+        success!(unsafe {
+            bindings::SimConnect_TransmitClientEvent(
+                self.handle.as_ptr(),
+                bindings::SIMCONNECT_OBJECT_ID_USER,
+                event.event_id(),
+                event.data(),
+                bindings::SIMCONNECT_GROUP_PRIORITY_HIGHEST,
+                bindings::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
             )
         })
     }
