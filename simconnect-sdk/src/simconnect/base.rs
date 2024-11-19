@@ -218,7 +218,7 @@ impl SimConnect {
                             let record = unsafe { event.rgData.get_unchecked(i) };
 
                             Airport {
-                                icao: fixed_c_str_to_string(&record.Icao),
+                                icao: fixed_c_str_to_string(&record.Ident),
                                 lat: record.Latitude,
                                 lon: record.Longitude,
                                 alt: record.Altitude,
@@ -240,7 +240,7 @@ impl SimConnect {
                             let record = unsafe { event.rgData.get_unchecked(i) };
 
                             Waypoint {
-                                icao: fixed_c_str_to_string(&record._base.Icao),
+                                icao: fixed_c_str_to_string(&record._base.Ident),
                                 lat: record._base.Latitude,
                                 lon: record._base.Longitude,
                                 alt: record._base.Altitude,
@@ -263,7 +263,7 @@ impl SimConnect {
                             let record = unsafe { event.rgData.get_unchecked(i) };
 
                             NDB {
-                                icao: fixed_c_str_to_string(&record._base._base.Icao),
+                                icao: fixed_c_str_to_string(&record._base._base.Ident),
                                 lat: record._base._base.Latitude,
                                 lon: record._base._base.Longitude,
                                 alt: record._base._base.Altitude,
@@ -300,7 +300,7 @@ impl SimConnect {
                                 == bindings::SIMCONNECT_RECV_ID_VOR_LIST_HAS_DME;
 
                             VOR {
-                                icao: fixed_c_str_to_string(&record._base._base._base.Icao),
+                                icao: fixed_c_str_to_string(&record._base._base._base.Ident),
                                 lat: record._base._base._base.Latitude,
                                 lon: record._base._base._base.Longitude,
                                 alt: record._base._base._base.Altitude,
