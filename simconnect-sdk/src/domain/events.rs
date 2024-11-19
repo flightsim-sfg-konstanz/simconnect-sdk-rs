@@ -307,5 +307,5 @@ impl ClientEvent {
 pub trait FlxClientEvent {
     fn event_id(&self) -> u32;
     fn event_name(&self) -> *const std::ffi::c_char;
-    fn data(&self) -> u32;
+    fn data(&self) -> (u32, u32, u32, u32, u32);
 }

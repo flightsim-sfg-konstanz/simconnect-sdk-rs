@@ -28,7 +28,7 @@ fn main() {
         .allowlist_function("SimConnect_Close")
         .allowlist_function("SimConnect_GetNextDispatch")
         .allowlist_function("SimConnect_MapClientEventToSimEvent")
-        .allowlist_function("SimConnect_TransmitClientEvent")
+        .allowlist_function("SimConnect_TransmitClientEvent_EX1")
         .allowlist_function("SimConnect_Open")
         .allowlist_function("SimConnect_RequestDataOnSimObject")
         .allowlist_function("SimConnect_RequestFacilitiesList")

@@ -54,13 +54,17 @@ impl SimConnect {
 
     pub fn transmit_event(&self, event: impl FlxClientEvent) -> Result<(), SimConnectError> {
         success!(unsafe {
-            bindings::SimConnect_TransmitClientEvent(
+            bindings::SimConnect_TransmitClientEvent_EX1(
                 self.handle.as_ptr(),
                 bindings::SIMCONNECT_OBJECT_ID_USER,
                 event.event_id(),
-                event.data(),
                 bindings::SIMCONNECT_GROUP_PRIORITY_HIGHEST,
                 bindings::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
+                event.data().0,
+                event.data().1,
+                event.data().2,
+                event.data().3,
+                event.data().4,
             )
         })
     }
