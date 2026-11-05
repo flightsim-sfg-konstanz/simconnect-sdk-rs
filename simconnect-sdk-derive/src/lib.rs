@@ -123,9 +123,9 @@ pub fn derive(input: TokenStream) -> TokenStream {
 
 fn build_packed_field(ident: &proc_macro2::Ident, path: &syn::Path) -> proc_macro2::TokenStream {
     let path_segments = &path.segments;
-    let path_idents = path_segments.iter().map(|s| &s.ident);
+    let path_ident = path_segments.last().map(|s| &s.ident);
 
-    match path_idents.last() {
+    match path_ident {
         Some(value) if value == "String" => {
             quote! {
                 #ident: [std::primitive::i8; 256]
@@ -144,9 +144,9 @@ fn build_packed_field_assignment(
     path: &syn::Path,
 ) -> proc_macro2::TokenStream {
     let path_segments = &path.segments;
-    let path_idents = path_segments.iter().map(|s| &s.ident);
+    let path_ident = path_segments.last().map(|s| &s.ident);
 
-    match path_idents.last() {
+    match path_ident {
         Some(value) if value == "String" => {
             quote! {
                 #ident: simconnect_sdk::fixed_c_str_to_string(&raw.#ident)
@@ -168,7 +168,7 @@ fn build_sc_definition(
         "expected attribute `#[simconnect(name = \"...\", unit = \"...\")]`. `unit` is optional.";
 
     let path_segments = &path.segments;
-    let path_idents = path_segments.iter().map(|s| &s.ident);
+    let path_ident = path_segments.last().map(|s| &s.ident);
 
     let name = properties.get("name").expect("this should never happen");
     let unit = match properties.get("unit") {
@@ -176,7 +176,7 @@ fn build_sc_definition(
         None => "",
     };
 
-    match path_idents.last() {
+    match path_ident {
         Some(value) if value == "f64" => {
             quote! {
                 client.add_to_data_definition(id, #name, #unit, simconnect_sdk::DataType::Float64)?;

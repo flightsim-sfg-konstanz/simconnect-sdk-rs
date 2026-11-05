@@ -221,9 +221,9 @@ pub fn parse_field_attributes(
                     match ty {
                         syn::Type::Path(syn::TypePath { path, .. }) => {
                             let path_segments = &path.segments;
-                            let path_idents = path_segments.iter().map(|s| &s.ident);
+                            let path_ident = path_segments.last().map(|s| &s.ident);
 
-                            match path_idents.last() {
+                            match path_ident {
                                 Some(value)
                                     if SUPPORTED_FIELD_TYPES
                                         .contains(&value.to_string().as_str()) =>
