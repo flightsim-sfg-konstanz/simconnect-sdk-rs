@@ -33,6 +33,8 @@
 | SimConnect_AddToDataDefinition               | &check; | Encapsulated by `register_object` and the `simconnect` macro. Supports `f64`, `bool` and `String`. |
 | SimConnect_SetClientData                     |         |                                                                                                    |
 | SimConnect_SetDataOnSimObject                | &check; | Encapsulated by `set_variable`, one `f64` at a time.                                               |
+| SimConnect_EnumerateInputEvents              | &check; | Encapsulated by `enumerate_input_events`.                                                          |
+| SimConnect_SetInputEvent                     | &check; | Encapsulated by `set_input_event`, numeric input events only.                                      |
 | SimConnect_ClearClientDataDefinition         |         |                                                                                                    |
 | SimConnect_ClearDataDefinition               | &check; |                                                                                                    |
 | SimConnect_MapInputEventToClientEvent        |         |                                                                                                    |

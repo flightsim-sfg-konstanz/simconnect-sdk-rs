@@ -1,5 +1,6 @@
 use crate::{
-    Airport, ClientEvent, SimConnectError, SimConnectObjectExt, SystemEvent, Waypoint, NDB, VOR,
+    Airport, ClientEvent, InputEvent, SimConnectError, SimConnectObjectExt, SystemEvent, Waypoint,
+    NDB, VOR,
 };
 
 /// Notification received from SimConnect.
@@ -22,6 +23,8 @@ pub enum Notification {
     NdbList(Vec<NDB>),
     /// A list of [crate::VOR].
     VorList(Vec<VOR>),
+    /// A part of the list of [crate::InputEvent]; `last` is set on the final part.
+    InputEventList { events: Vec<InputEvent>, last: bool },
     /// SimConnect quit
     Quit,
 }

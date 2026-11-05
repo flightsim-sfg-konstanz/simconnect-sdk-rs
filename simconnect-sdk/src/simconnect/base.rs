@@ -3,7 +3,7 @@ use std::{collections::HashMap, ffi::c_void};
 use tracing::{error, span, trace, warn, Level};
 
 use crate::domain::{
-    Airport, ClientEvent, ClientEventRequest, Notification, Object, SystemEvent,
+    Airport, ClientEvent, ClientEventRequest, InputEvent, Notification, Object, SystemEvent,
     SystemEventRequest, Waypoint, CLIENT_EVENT_DISCRIMINANT_START, NDB, VOR,
 };
 use crate::helpers::fixed_c_str_to_string;
@@ -385,6 +385,32 @@ impl SimConnect {
 
                     Ok(Some(Notification::VorList(data)))
                 }
+                bindings::SIMCONNECT_RECV_ID_SIMCONNECT_RECV_ID_ENUMERATE_INPUT_EVENTS => {
+                    trace!("Received SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS");
+
+                    let recv = data_buf as *const bindings::SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS;
+                    let event: &bindings::SIMCONNECT_RECV_ENUMERATE_INPUT_EVENTS =
+                        unsafe { &*recv };
+
+                    let last = self.unregister_potential_transient_request(
+                        event._base.dwEntryNumber,
+                        event._base.dwOutOf,
+                        event._base.dwRequestID,
+                    );
+
+                    let records = unsafe {
+                        list_records(std::ptr::addr_of!((*recv).rgData), event._base.dwArraySize)
+                    };
+                    let data = records
+                        .iter()
+                        .map(|record| InputEvent {
+                            name: fixed_c_str_to_string(&record.Name),
+                            hash: record.Hash,
+                        })
+                        .collect::<Vec<_>>();
+
+                    Ok(Some(Notification::InputEventList { events: data, last }))
+                }
                 bindings::SIMCONNECT_RECV_ID_SIMCONNECT_RECV_ID_EXCEPTION => {
                     let event: &bindings::SIMCONNECT_RECV_EXCEPTION =
                         unsafe { &*(data_buf as *const bindings::SIMCONNECT_RECV_EXCEPTION) };
@@ -469,6 +495,7 @@ impl SimConnect {
     /// 1) the last entry in the list and
     /// 2) transient
     /// and if yes, it gets unregistered.
+    /// Returns whether it is the last entry.
     #[tracing::instrument(
         name = "SimConnect::unregister_potential_transient_request",
         level = "trace",
@@ -480,8 +507,9 @@ impl SimConnect {
         entry_number: u32,
         out_of: u32,
         request_id: u32,
-    ) {
-        if entry_number + 1 >= out_of {
+    ) -> bool {
+        let last = entry_number.saturating_add(1) >= out_of;
+        if last {
             // This is the last entry, so we can clear the request if it's transient.
             let transient = self.is_transient_request(request_id);
             tracing::Span::current().record("transient", transient);
@@ -496,6 +524,7 @@ impl SimConnect {
                 }
             }
         }
+        last
     }
 }
 

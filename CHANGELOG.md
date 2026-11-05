@@ -10,6 +10,8 @@ file. This change log follows the conventions of
 
 - `SimConnect::map_client_event_to_sim_event` and `SimConnect::transmit_event` send client events with up to five parameters, described by the `FlxClientEvent` trait.
 - `SimConnect::register_variable` and `SimConnect::set_variable` write a simulation variable, `L:` variables included.
+- `SimConnect::enumerate_input_events` lists the input events of the user aircraft in `Notification::InputEventList`, whose `last` marks the final part of a listing.
+- `SimConnect::set_input_event` sets a numeric input event, the same path a click in the virtual cockpit takes.
 
 ### Changed
 
