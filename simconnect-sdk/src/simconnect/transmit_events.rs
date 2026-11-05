@@ -15,7 +15,7 @@ impl SimConnect {
             bindings::SimConnect_MapClientEventToSimEvent(
                 self.handle.as_ptr(),
                 event.event_id(),
-                event.event_name(),
+                event.event_name().as_ptr(),
             )
         })
     }
