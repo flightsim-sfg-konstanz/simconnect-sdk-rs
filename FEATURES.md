@@ -2,19 +2,19 @@
 
 ## General
 
-| Feature                                 | Status  | Comment                                      |
-| --------------------------------------- | ------- | -------------------------------------------- |
-| DispatchProc                            |         |                                              |
-| SimConnect_Open                         | &check; |                                              |
-| SimConnect_Close                        | &check; |                                              |
-| SimConnect_CallDispatch                 |         |                                              |
-| SimConnect_GetNextDispatch              | &check; |                                              |
-| SimConnect_RequestSystemState           |         |                                              |
-| SimConnect_MapClientEventToSimEvent     | &check; | Encapsulated by `subscribe_to_client_event`. |
-| SimConnect_SubscribeToSystemEvent       | &check; |                                              |
-| SimConnect_SetSystemEventState          |         |                                              |
-| SimConnect_UnsubscribeFromSystemEvent   | &check; |                                              |
-| SimConnect_SetNotificationGroupPriority | &check; | Encapsulated by `subscribe_to_client_event`. |
+| Feature                                 | Status  | Comment                                                                          |
+| --------------------------------------- | ------- | -------------------------------------------------------------------------------- |
+| DispatchProc                            |         |                                                                                  |
+| SimConnect_Open                         | &check; |                                                                                  |
+| SimConnect_Close                        | &check; |                                                                                  |
+| SimConnect_CallDispatch                 |         |                                                                                  |
+| SimConnect_GetNextDispatch              | &check; |                                                                                  |
+| SimConnect_RequestSystemState           |         |                                                                                  |
+| SimConnect_MapClientEventToSimEvent     | &check; | Encapsulated by `subscribe_to_client_event` and `map_client_event_to_sim_event`. |
+| SimConnect_SubscribeToSystemEvent       | &check; |                                                                                  |
+| SimConnect_SetSystemEventState          |         |                                                                                  |
+| SimConnect_UnsubscribeFromSystemEvent   | &check; |                                                                                  |
+| SimConnect_SetNotificationGroupPriority | &check; | Encapsulated by `subscribe_to_client_event`.                                     |
 
 ## Events And Data
 
@@ -25,7 +25,7 @@
 | SimConnect_AddClientEventToNotificationGroup | &check; | Encapsulated by `subscribe_to_client_event`.                                                       |
 | SimConnect_RemoveClientEvent                 | &check; |                                                                                                    |
 | SimConnect_TransmitClientEvent               |         |                                                                                                    |
-| SimConnect_TransmitClientEvent_EX1           |         |                                                                                                    |
+| SimConnect_TransmitClientEvent_EX1           | &check; | Encapsulated by `transmit_event`.                                                                  |
 | SimConnect_MapClientDataNameToID             |         |                                                                                                    |
 | SimConnect_RequestClientData                 |         |                                                                                                    |
 | SimConnect_CreateClientData                  |         |                                                                                                    |

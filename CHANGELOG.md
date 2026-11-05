@@ -6,7 +6,13 @@ file. This change log follows the conventions of
 
 ## [Unreleased]
 
+### Added
 
+- `SimConnect::map_client_event_to_sim_event` and `SimConnect::transmit_event` send client events with up to five parameters, described by the `FlxClientEvent` trait.
+
+### Changed
+
+- Updated to MSFS SDK v0.24.3.0.
 
 ### Fixed
 
