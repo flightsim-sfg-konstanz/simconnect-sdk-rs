@@ -9,6 +9,7 @@ file. This change log follows the conventions of
 ### Added
 
 - `SimConnect::map_client_event_to_sim_event` and `SimConnect::transmit_event` send client events with up to five parameters, described by the `FlxClientEvent` trait.
+- `SimConnect::register_variable` and `SimConnect::set_variable` write a simulation variable, `L:` variables included.
 
 ### Changed
 

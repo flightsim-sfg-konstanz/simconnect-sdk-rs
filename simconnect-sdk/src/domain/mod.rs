@@ -6,6 +6,7 @@ mod notification;
 mod period;
 mod system_event;
 mod transmit_event;
+mod variable;
 
 pub use client_event::*;
 pub use condition::*;
@@ -15,3 +16,4 @@ pub use notification::*;
 pub use period::*;
 pub use system_event::*;
 pub use transmit_event::*;
+pub use variable::*;
