@@ -54,31 +54,31 @@ pub enum SystemEventRequest {
 impl SystemEventRequest {
     pub(crate) fn into_c_char(self) -> *const c_char {
         match self {
-            SystemEventRequest::OneSecond => "1sec\0".as_ptr() as *const c_char,
-            SystemEventRequest::FourSeconds => "4sec\0".as_ptr() as *const c_char,
-            SystemEventRequest::SixTimesPerSecond => "6Hz\0".as_ptr() as *const c_char,
-            SystemEventRequest::AircraftLoaded => "AircraftLoaded\0".as_ptr() as *const c_char,
-            SystemEventRequest::Crashed => "Crashed\0".as_ptr() as *const c_char,
-            SystemEventRequest::CrashReset => "CrashReset\0".as_ptr() as *const c_char,
-            SystemEventRequest::FlightLoaded => "FlightLoaded\0".as_ptr() as *const c_char,
-            SystemEventRequest::FlightSaved => "FlightSaved\0".as_ptr() as *const c_char,
+            SystemEventRequest::OneSecond => c"1sec".as_ptr() as *const c_char,
+            SystemEventRequest::FourSeconds => c"4sec".as_ptr() as *const c_char,
+            SystemEventRequest::SixTimesPerSecond => c"6Hz".as_ptr() as *const c_char,
+            SystemEventRequest::AircraftLoaded => c"AircraftLoaded".as_ptr() as *const c_char,
+            SystemEventRequest::Crashed => c"Crashed".as_ptr() as *const c_char,
+            SystemEventRequest::CrashReset => c"CrashReset".as_ptr() as *const c_char,
+            SystemEventRequest::FlightLoaded => c"FlightLoaded".as_ptr() as *const c_char,
+            SystemEventRequest::FlightSaved => c"FlightSaved".as_ptr() as *const c_char,
             SystemEventRequest::FlightPlanActivated => {
-                "FlightPlanActivated\0".as_ptr() as *const c_char
+                c"FlightPlanActivated".as_ptr() as *const c_char
             }
             SystemEventRequest::FlightPlanDeactivated => {
-                "FlightPlanDeactivated\0".as_ptr() as *const c_char
+                c"FlightPlanDeactivated".as_ptr() as *const c_char
             }
-            SystemEventRequest::Frame => "Frame\0".as_ptr() as *const c_char,
-            SystemEventRequest::Pause => "Pause\0".as_ptr() as *const c_char,
-            SystemEventRequest::Paused => "Paused\0".as_ptr() as *const c_char,
-            SystemEventRequest::PauseFrame => "PauseFrame\0".as_ptr() as *const c_char,
-            SystemEventRequest::PositionChanged => "PositionChanged\0".as_ptr() as *const c_char,
-            SystemEventRequest::Sim => "Sim\0".as_ptr() as *const c_char,
-            SystemEventRequest::SimStart => "SimStart\0".as_ptr() as *const c_char,
-            SystemEventRequest::SimStop => "SimStop\0".as_ptr() as *const c_char,
-            SystemEventRequest::Sound => "Sound\0".as_ptr() as *const c_char,
-            SystemEventRequest::Unpaused => "Unpaused\0".as_ptr() as *const c_char,
-            SystemEventRequest::View => "View\0".as_ptr() as *const c_char,
+            SystemEventRequest::Frame => c"Frame".as_ptr() as *const c_char,
+            SystemEventRequest::Pause => c"Pause".as_ptr() as *const c_char,
+            SystemEventRequest::Paused => c"Paused".as_ptr() as *const c_char,
+            SystemEventRequest::PauseFrame => c"PauseFrame".as_ptr() as *const c_char,
+            SystemEventRequest::PositionChanged => c"PositionChanged".as_ptr() as *const c_char,
+            SystemEventRequest::Sim => c"Sim".as_ptr() as *const c_char,
+            SystemEventRequest::SimStart => c"SimStart".as_ptr() as *const c_char,
+            SystemEventRequest::SimStop => c"SimStop".as_ptr() as *const c_char,
+            SystemEventRequest::Sound => c"Sound".as_ptr() as *const c_char,
+            SystemEventRequest::Unpaused => c"Unpaused".as_ptr() as *const c_char,
+            SystemEventRequest::View => c"View".as_ptr() as *const c_char,
         }
     }
 }
@@ -267,45 +267,4 @@ impl TryFrom<&bindings::SIMCONNECT_RECV_EVENT_FRAME> for SystemEvent {
             )),
         }
     }
-}
-
-pub(crate) const CLIENT_EVENT_START: u32 = 128;
-
-/// SimConnect Client Event.
-///
-/// WIP. As defined by <https://www.prepar3d.com/SDKv5/sdk/references/variables/event_ids.html>.
-#[derive(Debug, Copy, Clone, PartialEq, Eq, num_enum::TryFromPrimitive)]
-#[repr(u32)]
-#[non_exhaustive]
-pub enum ClientEvent {
-    // Aircraft Engine
-    /// Set throttles max.
-    ThrottleFull = CLIENT_EVENT_START,
-    // ---------------
-    // Aircraft Miscellaneous Systems
-    /// Increment brake pressure. Note: These are simulated spring-loaded toe brakes, which will bleed back to zero over time.
-    Brakes,
-    /// Increments left brake pressure. Note: This is a simulated spring-loaded toe brake, which will bleed back to zero over time.
-    BrakesLeft,
-    /// Sets left brake position from axis controller (e.g. joystick). -16383 (0 brakes) to +16383 (max brakes).
-    AxisLeftBrakeSet,
-}
-
-impl ClientEvent {
-    pub(crate) fn into_c_char(self) -> *const c_char {
-        match self {
-            // Aircraft Engine
-            ClientEvent::ThrottleFull => "THROTTLE_FULL\0".as_ptr() as *const c_char,
-            // Aircraft Miscellaneous Systems
-            ClientEvent::Brakes => "BRAKES\0".as_ptr() as *const c_char,
-            ClientEvent::BrakesLeft => "BRAKES_LEFT\0".as_ptr() as *const c_char,
-            ClientEvent::AxisLeftBrakeSet => "AXIS_LEFT_BRAKE_SET\0".as_ptr() as *const c_char,
-        }
-    }
-}
-
-pub trait FlxClientEvent {
-    fn event_id(&self) -> u32;
-    fn event_name(&self) -> *const std::ffi::c_char;
-    fn data(&self) -> (u32, u32, u32, u32, u32);
 }

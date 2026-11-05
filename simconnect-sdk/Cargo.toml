@@ -1,6 +1,6 @@
 [package]
 name = "simconnect-sdk"
-version = "0.2.1"
+version = "0.2.3"
 edition = "2021"
 license = "MIT"
 authors = ["Mihai Dinculescu <mihai.dinculescu@outlook.com>"]
@@ -16,13 +16,13 @@ default = []
 derive = ["simconnect-sdk-derive"]
 
 [build-dependencies]
-bindgen = "0.62"
+bindgen = "0.72"
 
 [dependencies]
-num_enum = "0.5"
+num_enum = "0.7"
 tracing = "0.1"
-thiserror = "1.0"
-simconnect-sdk-derive = { version = "=0.2.1", path = "../simconnect-sdk-derive", optional = true }
+thiserror = "2.0"
+simconnect-sdk-derive = { version = "=0.2.3", path = "../simconnect-sdk-derive", optional = true }
 
 [package.metadata.docs.rs]
 features = ["derive"]
