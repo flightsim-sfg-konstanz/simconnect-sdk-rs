@@ -7,15 +7,28 @@ fn main() {
     println!("cargo:rerun-if-changed=ffi/include/SimConnect.h");
     println!("cargo:rerun-if-changed=ffi/lib/SimConnect.lib");
     println!("cargo:rerun-if-changed=ffi/lib/SimConnect.dll");
+    println!("cargo:rerun-if-env-changed=DOCS_RS");
 
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     println!("cargo:rustc-link-search={}", out_path.to_string_lossy());
-    println!("cargo:rustc-link-lib=static=SimConnect");
+    // SimConnect.lib is the import library of SimConnect.dll.
+    println!("cargo:rustc-link-lib=dylib=SimConnect");
 
-    let builder = if env::var("DOCS_RS").is_ok() {
+    // MinGW's windows.h is lowercase and its enums are unsigned, so windows-gnu builds parse the fake header as MSVC
+    // does. It gives the same bindings as Wrapper.h.
+    let mingw = env::var("CARGO_CFG_TARGET_OS").is_ok_and(|os| os == "windows")
+        && env::var("CARGO_CFG_TARGET_ENV").is_ok_and(|target_env| target_env == "gnu");
+
+    let builder = if env::var("DOCS_RS").is_ok() || mingw {
         bindgen::Builder::default().header("ffi/include/WrapperFake.h")
     } else {
         bindgen::Builder::default().header("ffi/include/Wrapper.h")
+    };
+
+    let builder = if mingw {
+        builder.clang_arg("--target=x86_64-pc-windows-msvc")
+    } else {
+        builder
     };
 
     let bindings = builder

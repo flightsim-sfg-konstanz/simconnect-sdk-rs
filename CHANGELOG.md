@@ -12,6 +12,7 @@ file. This change log follows the conventions of
 - `SimConnect::register_variable` and `SimConnect::set_variable` write a simulation variable, `L:` variables included.
 - `SimConnect::enumerate_input_events` lists the input events of the user aircraft in `Notification::InputEventList`, whose `last` marks the final part of a listing.
 - `SimConnect::set_input_event` sets a numeric input event, the same path a click in the virtual cockpit takes.
+- The crate builds for `x86_64-pc-windows-gnu`, so applications cross-compile from Linux with MinGW-w64.
 
 ### Changed
 
