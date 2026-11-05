@@ -6,6 +6,12 @@ file. This change log follows the conventions of
 
 ## [Unreleased]
 
+
+
+### Fixed
+
+- The docs.rs build defines `UINT64`, which the SimConnect header needs.
+
 ## [v0.2.3] - 2026-02-22
 
 ### Added

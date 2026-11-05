@@ -12,6 +12,7 @@
 
 typedef unsigned long DWORD;
 typedef unsigned char BYTE;
+typedef unsigned long long UINT64;
 typedef int BOOL;
 typedef long LONG;
 typedef LONG HRESULT;
