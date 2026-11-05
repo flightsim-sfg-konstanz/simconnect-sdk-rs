@@ -227,8 +227,8 @@ impl SimConnect {
                 bindings::SIMCONNECT_RECV_ID_SIMCONNECT_RECV_ID_AIRPORT_LIST => {
                     trace!("Received SIMCONNECT_RECV_AIRPORT_LIST");
 
-                    let event: &bindings::SIMCONNECT_RECV_AIRPORT_LIST =
-                        unsafe { &*(data_buf as *const bindings::SIMCONNECT_RECV_AIRPORT_LIST) };
+                    let recv = data_buf as *const bindings::SIMCONNECT_RECV_AIRPORT_LIST;
+                    let event: &bindings::SIMCONNECT_RECV_AIRPORT_LIST = unsafe { &*recv };
 
                     self.unregister_potential_transient_request(
                         event._base.dwEntryNumber,
@@ -236,17 +236,16 @@ impl SimConnect {
                         event._base.dwRequestID,
                     );
 
-                    let data = (0..event._base.dwArraySize as usize)
-                        .map(|i| {
-                            // `rgData` is defined as a 1-element array, but it is actually a variable-length array.
-                            let record = unsafe { event.rgData.get_unchecked(i) };
-
-                            Airport {
-                                icao: fixed_c_str_to_string(&record.Ident),
-                                lat: record.Latitude,
-                                lon: record.Longitude,
-                                alt: record.Altitude,
-                            }
+                    let records = unsafe {
+                        list_records(std::ptr::addr_of!((*recv).rgData), event._base.dwArraySize)
+                    };
+                    let data = records
+                        .iter()
+                        .map(|record| Airport {
+                            icao: fixed_c_str_to_string(&record.Ident),
+                            lat: record.Latitude,
+                            lon: record.Longitude,
+                            alt: record.Altitude,
                         })
                         .collect::<Vec<_>>();
 
@@ -255,8 +254,8 @@ impl SimConnect {
                 bindings::SIMCONNECT_RECV_ID_SIMCONNECT_RECV_ID_WAYPOINT_LIST => {
                     trace!("Received SIMCONNECT_RECV_WAYPOINT_LIST");
 
-                    let event: &bindings::SIMCONNECT_RECV_WAYPOINT_LIST =
-                        unsafe { &*(data_buf as *const bindings::SIMCONNECT_RECV_WAYPOINT_LIST) };
+                    let recv = data_buf as *const bindings::SIMCONNECT_RECV_WAYPOINT_LIST;
+                    let event: &bindings::SIMCONNECT_RECV_WAYPOINT_LIST = unsafe { &*recv };
 
                     self.unregister_potential_transient_request(
                         event._base.dwEntryNumber,
@@ -264,18 +263,17 @@ impl SimConnect {
                         event._base.dwRequestID,
                     );
 
-                    let data = (0..event._base.dwArraySize as usize)
-                        .map(|i| {
-                            // `rgData` is defined as a 1-element array, but it is actually a variable-length array.
-                            let record = unsafe { event.rgData.get_unchecked(i) };
-
-                            Waypoint {
-                                icao: fixed_c_str_to_string(&record._base.Ident),
-                                lat: record._base.Latitude,
-                                lon: record._base.Longitude,
-                                alt: record._base.Altitude,
-                                mag_var: record.fMagVar,
-                            }
+                    let records = unsafe {
+                        list_records(std::ptr::addr_of!((*recv).rgData), event._base.dwArraySize)
+                    };
+                    let data = records
+                        .iter()
+                        .map(|record| Waypoint {
+                            icao: fixed_c_str_to_string(&record._base.Ident),
+                            lat: record._base.Latitude,
+                            lon: record._base.Longitude,
+                            alt: record._base.Altitude,
+                            mag_var: record.fMagVar,
                         })
                         .collect::<Vec<_>>();
 
@@ -284,8 +282,8 @@ impl SimConnect {
                 bindings::SIMCONNECT_RECV_ID_SIMCONNECT_RECV_ID_NDB_LIST => {
                     trace!("Received SIMCONNECT_RECV_NDB_LIST");
 
-                    let event: &bindings::SIMCONNECT_RECV_NDB_LIST =
-                        unsafe { &*(data_buf as *const bindings::SIMCONNECT_RECV_NDB_LIST) };
+                    let recv = data_buf as *const bindings::SIMCONNECT_RECV_NDB_LIST;
+                    let event: &bindings::SIMCONNECT_RECV_NDB_LIST = unsafe { &*recv };
 
                     self.unregister_potential_transient_request(
                         event._base.dwEntryNumber,
@@ -293,19 +291,18 @@ impl SimConnect {
                         event._base.dwRequestID,
                     );
 
-                    let data = (0..event._base.dwArraySize as usize)
-                        .map(|i| {
-                            // `rgData` is defined as a 1-element array, but it is actually a variable-length array.
-                            let record = unsafe { event.rgData.get_unchecked(i) };
-
-                            NDB {
-                                icao: fixed_c_str_to_string(&record._base._base.Ident),
-                                lat: record._base._base.Latitude,
-                                lon: record._base._base.Longitude,
-                                alt: record._base._base.Altitude,
-                                mag_var: record._base.fMagVar,
-                                frequency: record.fFrequency,
-                            }
+                    let records = unsafe {
+                        list_records(std::ptr::addr_of!((*recv).rgData), event._base.dwArraySize)
+                    };
+                    let data = records
+                        .iter()
+                        .map(|record| NDB {
+                            icao: fixed_c_str_to_string(&record._base._base.Ident),
+                            lat: record._base._base.Latitude,
+                            lon: record._base._base.Longitude,
+                            alt: record._base._base.Altitude,
+                            mag_var: record._base.fMagVar,
+                            frequency: record.fFrequency,
                         })
                         .collect::<Vec<_>>();
 
@@ -314,8 +311,8 @@ impl SimConnect {
                 bindings::SIMCONNECT_RECV_ID_SIMCONNECT_RECV_ID_VOR_LIST => {
                     trace!("Received SIMCONNECT_RECV_VOR_LIST");
 
-                    let event: &bindings::SIMCONNECT_RECV_VOR_LIST =
-                        unsafe { &*(data_buf as *const bindings::SIMCONNECT_RECV_VOR_LIST) };
+                    let recv = data_buf as *const bindings::SIMCONNECT_RECV_VOR_LIST;
+                    let event: &bindings::SIMCONNECT_RECV_VOR_LIST = unsafe { &*recv };
 
                     self.unregister_potential_transient_request(
                         event._base.dwEntryNumber,
@@ -323,11 +320,12 @@ impl SimConnect {
                         event._base.dwRequestID,
                     );
 
-                    let data = (0..event._base.dwArraySize as usize)
-                        .map(|i| {
-                            // `rgData` is defined as a 1-element array, but it is actually a variable-length array.
-                            let record = unsafe { event.rgData.get_unchecked(i) };
-
+                    let records = unsafe {
+                        list_records(std::ptr::addr_of!((*recv).rgData), event._base.dwArraySize)
+                    };
+                    let data = records
+                        .iter()
+                        .map(|record| {
                             let has_nav_signal = record.Flags
                                 & bindings::SIMCONNECT_RECV_ID_VOR_LIST_HAS_NAV_SIGNAL
                                 == bindings::SIMCONNECT_RECV_ID_VOR_LIST_HAS_NAV_SIGNAL;
@@ -501,9 +499,46 @@ impl SimConnect {
     }
 }
 
+/// The records of a SimConnect list message, which declares `rgData` as a 1-element
+/// array but holds `count` records.
+///
+/// # Safety
+/// `records` must point to the `rgData` field of a message SimConnect delivered, derived
+/// from the pointer to the whole message, and the message must hold `count` records.
+unsafe fn list_records<'a, T>(records: *const [T; 1], count: u32) -> &'a [T] {
+    std::slice::from_raw_parts(records.cast::<T>(), count as usize)
+}
+
 impl Drop for SimConnect {
     #[tracing::instrument(name = "SimConnect::drop", level = "debug", skip(self))]
     fn drop(&mut self) {
         let _ = unsafe { bindings::SimConnect_Close(self.handle.as_ptr()) };
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::list_records;
+
+    #[repr(C, packed)]
+    #[derive(Clone, Copy)]
+    struct Record {
+        value: u16,
+    }
+
+    #[repr(C, packed)]
+    struct List {
+        count: u32,
+        records: [Record; 1],
+    }
+
+    #[test]
+    fn list_records_reads_every_record_past_the_declared_array() {
+        let message: [u8; 10] = [3, 0, 0, 0, 1, 0, 2, 0, 3, 0];
+        let list = message.as_ptr().cast::<List>();
+        let count = unsafe { (*list).count };
+        let records = unsafe { list_records(std::ptr::addr_of!((*list).records), count) };
+        let values: Vec<u16> = records.iter().map(|record| record.value).collect();
+        assert_eq!(values, [1, 2, 3]);
     }
 }

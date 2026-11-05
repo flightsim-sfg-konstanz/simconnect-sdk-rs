@@ -16,6 +16,7 @@ file. This change log follows the conventions of
 
 ### Fixed
 
+- Facility lists with more than one record no longer index past the declared length of `rgData`, which aborted debug builds.
 - The docs.rs build defines `UINT64`, which the SimConnect header needs.
 
 ## [v0.2.3] - 2026-02-22
